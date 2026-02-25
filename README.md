@@ -1,6 +1,6 @@
 # MongoDB Vector Search Agent with Azure AI Foundry
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYOUR_ORG%2Fmongodb-foundry-agent%2Fmain%2Fdeploy%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fvpriyanshi%2Fmongodb-foundry-agent%2Fmain%2Fdeploy%2Fazuredeploy.json)
 
 Build intelligent agents that perform semantic search over your MongoDB data using Azure AI Foundry and the MongoDB MCP Server.
 
@@ -55,7 +55,7 @@ A hosted AI agent in Azure AI Foundry that can:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_ORG/mongodb-foundry-agent.git
+git clone https://github.com/vpriyanshi/mongodb-foundry-agent.git
 cd mongodb-foundry-agent
 ```
 
