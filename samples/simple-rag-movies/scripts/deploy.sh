@@ -3,7 +3,13 @@
 
 set -e
 
+# Resolve sample root directory (one level up from scripts/)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SAMPLE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$SAMPLE_DIR"
+
 echo "=== MongoDB Vector Search Agent Deployment ==="
+echo "Running from: $SAMPLE_DIR"
 echo ""
 
 # Check prerequisites

@@ -14,7 +14,12 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+# Resolve sample root directory (one level up from scripts/)
+$SampleDir = Split-Path -Parent $PSScriptRoot
+Push-Location $SampleDir
+
 Write-Host "=== MongoDB Vector Search Agent Deployment ===" -ForegroundColor Cyan
+Write-Host "Running from: $SampleDir" -ForegroundColor Gray
 Write-Host ""
 
 # Check prerequisites
@@ -72,6 +77,9 @@ Write-Host "3. Add OpenAPI tool with URL: $embedUrl"
 Write-Host "4. Add MCP tool with URL: $mcpUrl"
 Write-Host "5. Copy instructions from docs/agent-instructions.md"
 Write-Host ""
+
+# Restore original directory
+Pop-Location
 
 # Return URLs for programmatic use
 return @{
