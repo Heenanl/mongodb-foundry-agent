@@ -46,9 +46,9 @@ A hosted AI agent in Azure AI Foundry that can:
 
 - [Azure Subscription](https://azure.microsoft.com/free/)
 - [Azure AI Foundry Project](https://ai.azure.com)
-- [MongoDB Atlas Account](https://www.mongodb.com/cloud/atlas) with:
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) — create via [Azure Native Integration](#option-a-create-mongodb-atlas-via-azure-native-integration) (recommended) or [Atlas Portal](#option-b-create-mongodb-atlas-via-atlas-portal), with:
   - `sample_mflix` sample database loaded
-  - Vector search index created (see [Setup](#mongodb-atlas-setup))
+  - Vector search index created (see [MongoDB Atlas Setup](#mongodb-atlas-setup))
 - [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)
 - [Azure Functions Core Tools](https://docs.microsoft.com/azure/azure-functions/functions-run-local)
 
@@ -148,14 +148,107 @@ See [sample-queries.md](./sample-queries.md) for more examples.
 
 ## MongoDB Atlas Setup
 
-### Load Sample Data
+You can provision MongoDB Atlas in two ways:
+- **Option A** — [Azure Native Integration](#option-a-create-mongodb-atlas-via-azure-native-integration) (recommended): Create and manage MongoDB Atlas directly from the Azure portal, with unified billing on your Azure invoice.
+- **Option B** — [MongoDB Atlas Portal](#option-b-create-mongodb-atlas-via-atlas-portal): Create a cluster directly on [cloud.mongodb.com](https://cloud.mongodb.com).
+
+Both options produce the same result — a MongoDB Atlas cluster with sample data and a vector search index. Choose whichever fits your workflow.
+
+---
+
+### Option A: Create MongoDB Atlas via Azure Native Integration
+
+> **Why this approach?** Azure Native Integration lets you provision, manage, and monitor MongoDB Atlas as a first-class Azure resource. Billing is consolidated into your Azure invoice, and you can use Azure RBAC, tags, and resource groups to manage the resource alongside your other Azure services.
+
+#### Prerequisites
+- An active [Azure subscription](https://azure.microsoft.com/free/) with **Owner** or **Contributor** role
+- (Optional) An existing [MongoDB Atlas account](https://www.mongodb.com/cloud/atlas) — one will be linked or created during setup
+
+#### Step 1: Create the MongoDB Atlas Resource in Azure Portal
+
+1. Sign in to the [Azure portal](https://portal.azure.com)
+2. Click **Create a resource** (or search for **MongoDB Atlas** in the top search bar)
+3. Select **MongoDB Atlas (Azure Native ISV Service)** from the Marketplace results
+4. Click **Create** and fill in the **Basics** tab:
+
+   | Field | Value |
+   |---|---|
+   | **Subscription** | Select your Azure subscription |
+   | **Resource group** | Use an existing one or create new (e.g., `mongodb-agent-rg`) |
+   | **Resource name** | A globally unique name for your Atlas resource |
+   | **Region** | Select the Azure region (e.g., `East US`) |
+   | **Organization name** | Your MongoDB Atlas organization name |
+
+5. (Optional) Add **Tags** for resource management
+6. Click **Review + create** → **Create**
+7. Wait for deployment to complete, then click **Go to resource**
+
+#### Step 2: Set Up Your Cluster in Atlas
+
+1. On the resource overview page, click **Go to MongoDB Atlas** — this opens the Atlas portal linked to your Azure account
+2. If you don't already have a cluster, create one:
+   - Select **Build a Cluster** → choose **M0 (Free)** tier for testing
+   - Select the same Azure region as your resource for lowest latency
+   - Click **Create Cluster**
+
+#### Step 3: Load Sample Data
+
+1. In the Atlas portal, find your cluster and click **...** (ellipsis menu)
+2. Select **Load Sample Dataset**
+3. Wait for the `sample_mflix` database to load (this takes a few minutes)
+
+#### Step 4: Create Vector Search Index
+
+1. Go to **Atlas Search** → **Create Search Index**
+2. Select **JSON Editor**
+3. Choose database: `sample_mflix`, collection: `embedded_movies`
+4. Index name: `vector_index`
+5. Paste this definition:
+
+```json
+{
+  "fields": [
+    {
+      "type": "vector",
+      "path": "plot_embedding",
+      "numDimensions": 1536,
+      "similarity": "cosine"
+    }
+  ]
+}
+```
+
+6. Click **Create Search Index**
+7. Wait for the index status to show **Active**
+
+#### Step 5: Get Connection String
+
+1. Go back to your cluster and click **Connect**
+2. Select **Drivers**
+3. Copy the connection string
+4. Replace `<password>` with your database user password
+
+> **Tip:** You can also find connection details from the Azure portal resource page under **Connection strings**.
+
+#### Additional Resources
+
+- [Quickstart: Create a MongoDB Atlas resource in Azure](https://learn.microsoft.com/azure/partner-solutions/mongodb-atlas/create)
+- [Manage MongoDB Atlas through Azure](https://learn.microsoft.com/azure/partner-solutions/mongodb-atlas/manage)
+
+---
+
+### Option B: Create MongoDB Atlas via Atlas Portal
+
+If you prefer to use the MongoDB Atlas portal directly (or already have an existing cluster):
+
+#### Load Sample Data
 
 1. Log in to [MongoDB Atlas](https://cloud.mongodb.com)
 2. Create a cluster (M0 free tier works)
 3. Click **...** → **Load Sample Dataset**
 4. Wait for `sample_mflix` database to load
 
-### Create Vector Search Index
+#### Create Vector Search Index
 
 1. Go to **Atlas Search** → **Create Search Index**
 2. Select **JSON Editor**
@@ -178,7 +271,7 @@ See [sample-queries.md](./sample-queries.md) for more examples.
 
 6. Click **Create Search Index**
 
-### Get Connection String
+#### Get Connection String
 
 1. Click **Connect** on your cluster
 2. Select **Drivers**
