@@ -158,6 +158,13 @@ in [`run_eval_cloud.py`](run_eval_cloud.py) and the queries in
 
 ---
 
+## ➡️ Next Step
+
+Continue to [Step 3 — APIM MCP gateway](../03-apim-mcp-gateway/): put the API behind Azure API
+Management and expose it as a governed MCP server.
+
+---
+
 ## 📚 References
 
 - [Agent evaluation sample (azure-ai-projects)](https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/ai/azure-ai-projects/samples/evaluations)
